@@ -99,7 +99,7 @@ fn main() {
             "e" => {
                 println!("Exiting.");
                 break;
-            }, // test
+            },
             _=> {
                 panic!("if you got this output you did something veeeery wrong. terminating.")
             },
