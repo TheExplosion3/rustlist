@@ -2,40 +2,51 @@ mod tools;
 mod structs;
 mod fileman;
 
-use std::{fs::{remove_file, File}, io::stdin, process::exit};
+use std::{fs::{remove_file, File}, io::{stdin, stdout, Write}, process::exit};
 
 use fileman::fileman::{file_saver, saver};
 use tools::str_input;
 
-use crate::{fileman::fileman::opener, structs::ListItem, tools::list_printer};
+use crate::{fileman::fileman::opener, structs::ListItem, tools::{list_printer}};
 
 
 fn main() {
     let mut user_input = String::new();
     let save_file: File;
 
-    user_input = str_input("Would you like to load a list, or create a new one? (s/n)", vec!["s", "n"]);
+    user_input = str_input("Would you like to load a list, or create a new one? (l/n)", vec!["l", "n"]);
 
     if user_input == "n" {
         println!("What is the directory of the file you would like to use?");
 
+        stdout().flush().expect("flush will not fail.");
+        user_input.clear();
         stdin().read_line(&mut user_input).expect("Must be a string, incorrect file will be handled later.");
-        save_file = opener(&user_input);
+
+        save_file = opener(&user_input.trim());
     }
     else {
         println!("What is the directory of the file you would like to use?");
 
+        stdout().flush().expect("flush will not fail.");
+        user_input.clear();
         stdin().read_line(&mut user_input).expect("Must be a string, incorrect file will be handled later.");
-        save_file = opener(&user_input);
+
+        save_file = opener(&user_input.trim());
     }
     let mut list: Vec<ListItem> = vec![];
     let file_dir: String = String::from(&user_input);
     loop {
-        user_input = str_input("What would you like to do to the list?\nCreate a new item (n)\nRemove an item (r)\nDelete the list (will exit after deleting) (d)\nList all current items(l)\nSave and exit(se)\nExit without saving(e)\n\n", vec!["n","r","d","l","se","e"]);
-        match user_input.as_str() {
+        stdout().flush().expect("flush will not fail");
+        user_input = str_input("What would you like to do to the list?\n\nCreate a new item (n)\nRemove an item (r)\nDelete the list (will exit after deleting) (d)\nList all current items (l)\nSave and exit (se)\nExit without saving (e)\n\n", vec!["n","r","d","l","se","e"]);
+        match user_input.as_str().trim() {
             "n"=> {
                 println!("What would you like the addition to say?\n");
+
+                stdout().flush().expect("flush will not fail");
+                user_input.clear();
                 stdin().read_line(&mut user_input).expect("Input must be a string");
+
                 list.push(ListItem {
                         item_id: list.len().try_into().expect("must be u128"),
                         contents: user_input,

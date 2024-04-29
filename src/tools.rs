@@ -14,7 +14,7 @@ pub fn str_input(provided_message: &str, options: Vec<&str>) -> String {
         stdin().read_line(&mut ret_str).expect("Did not enter a correct string");
 
         for i in options.clone().into_iter() {
-            if i == ret_str {
+            if i == ret_str.trim() {
                 breaker = true;
                 break;
             }
@@ -32,6 +32,10 @@ pub fn str_input(provided_message: &str, options: Vec<&str>) -> String {
 pub fn list_printer(list: &Vec<ListItem>) {
     for i in list.clone().into_iter() {
         println!("{}. {}", i.item_id, i.contents);
+        if i.item_id == 0 {
+            println!();
+            continue;
+        }
         if i.item_id - 1 == list.len().try_into().expect("list size has to be positive int") {
             println!();
         }
